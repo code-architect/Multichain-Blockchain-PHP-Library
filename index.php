@@ -20,20 +20,13 @@ $mc = $config->instance();
 $config = new Config();
 $mc = $config->instance();
 
-print_r($mc->getinfo());
 
+// Multichain Basic commands
+$multiBasic = new \CodeArchitect\Framework\Operations\MultichainBasic(mc: $mc);
 header('Content-Type: application/json');
 
-// Your data to be sent in the response
-$data = [
-    'message' => 'Hello, this is a simple REST API response!',
-    'timestamp' => time(),
-];
+// check if the connection is active or not
+print_r($multiBasic->isActive());
 
-// Encode the data as JSON
-$response = json_encode($data);
-
-// Output the JSON response
-echo $response;
 
 
