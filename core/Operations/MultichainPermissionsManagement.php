@@ -78,18 +78,31 @@ class MultichainPermissionsManagement extends BaseClass
         }
     }
 
-    public function getListOfSpecificPermissions()
-    {
 
+    /**
+     * Get list of addresses with the given permission list
+     * @param string $permissions Example: comma seperated permission list like, 'send,receive'
+     * @return bool|string
+     */
+    public function getListOfSpecificPermissions(string $permissions): bool|string
+    {
+        $result = $this->mc->listpermissions($permissions);
+        if ($result) {
+            $data = ["status" => "success", "code" => 200, "data" => ["data" => $result]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        } else {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "Failed to get list permissions"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        }
     }
 
 
     /**
      * Get list of specific address permission
-     * @param string $address
+     * @param string|array $address Example either pass array of addresses or string
      * @return bool|string
      */
-    public function getListOfSpecificAddressPermissions(string $address): bool|string
+    public function getListOfSpecificAddressPermissions(string|array $address): bool|string
     {
         $result = $this->mc->listpermissions('*', $address);
 
@@ -102,21 +115,42 @@ class MultichainPermissionsManagement extends BaseClass
         }
     }
 
-    public function getListOfSpecificMultipleAddressPermissions()
-    {
 
+    /**
+     * Revoke permissions from an addresss
+     * @param string $address The wallet address
+     * @param string $permission Example: pass a single permission e.g, 'connect', or a string of permissions e.g.: 'send,receive'
+     * @return bool|string
+     */
+    public function revokeAddressPermissions(string $address, string $permission): bool|string
+    {
+        $result = $this->mc->revoke($address, $permission);
+        if ($result) {
+            $data = ["status" => "success", "code" => 200, "data" => ["data" => $result]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        } else {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "Failed to revoke permission or permission was not granted to begin with"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        }
     }
 
 
-    public function revokeAddressPermissions()
+    /**
+     * Check if the permission was given
+     * @param string $address Wallet address
+     * @param string $permission Example: Pass a permission string e.g: 'send'
+     * @return bool|string
+     */
+    public function verifyPermission(string $address, string $permission): bool|string
     {
-
-    }
-
-
-    public function verifyPermission()
-    {
-
+        $result = $this->mc->verifypermission($address, $permission);
+        if ($result) {
+            $data = ["status" => "success", "code" => 200, "data" => ["data" => $result]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        } else {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "Not allowed or permission was not granted to begin with"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        }
     }
 
 }

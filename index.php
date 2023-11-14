@@ -27,10 +27,9 @@ header('Content-Type: application/json');
 
 //dd($multiPermission->getListOfSpecificAddressPermissions("17oExeajBCrYqP4v7gAjpspzk4eeun9dbTgiDV"));
 //dd($multiPermission->grantGlobalPermission("1FJLQU46LYz4Lg1nyPciXJE4VCwRT7mDYX1yFY", 'send,receive'));
+//dd($multiPermission->getListOfSpecificPermissions('send,receive'));
+//dd($multiPermission->verifyPermission("1FJLQU46LYz4Lg1nyPciXJE4VCwRT7mDYX1yFY", 'send'));
 
-$var = ["123341sdfgrwhwr", "352feq5h"];
-$result =  implode(',', $var);
-dd($result);
 
 
 
