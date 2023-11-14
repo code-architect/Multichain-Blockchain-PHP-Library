@@ -23,7 +23,7 @@ header('Content-Type: application/json');
 // List of all the streams
 //print_r($multiStream->getListOfStreams());
 // create a new stream
-dd($multiBasic->getCurrentWalletAddress());
+dd($multiBasic->getsSecificAddresses(["18jqy14p8VLa9Zhouq3ZFUdSRjzam5cxXcphrZ", "1FJLQU46LYz4Lg1nyPciXJE4VCwRT7mDYX1yFY"]));
 
 
 

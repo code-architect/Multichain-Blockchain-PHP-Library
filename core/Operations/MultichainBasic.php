@@ -12,6 +12,7 @@ class MultichainBasic extends BaseClass
         return $this->mc->getinfo();
     }
 
+
     /**
      * Check if the connection is active or not
      * @return false|string
@@ -54,5 +55,58 @@ class MultichainBasic extends BaseClass
     }
 
 
+    /**
+     * Create a new wallet address
+     * @return bool|string
+     */
+    public function createNewAddress(): bool|string
+    {
+        $address = $this->mc->getnewaddress();
+
+        if ($address) {
+            $data = ["status" => "success", "code" => 200, "data" => ["data" => "New wallet address $address"]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        } else {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "Failed to create wallet address"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        }
+    }
+
+
+    /**
+     * List all the addresses
+     * @return bool|string
+     */
+    public function getListOfAllAddresses(): bool|string
+    {
+        $addresses = $this->mc->listaddresses();
+
+        if ($addresses) {
+            $data = ["status" => "success", "code" => 200, "data" => ["data" => $addresses]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        } else {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "Failed to get addresses"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        }
+    }
+
+
+    /**
+     * Get specific address information
+     * @param string|array $address
+     * @return bool|string
+     */
+    public function getsSpecificAddresses(string|array $address): bool|string
+    {
+        $addresses = $this->mc->listaddresses($address);
+
+        if ($addresses) {
+            $data = ["status" => "success", "code" => 200, "data" => ["data" => $addresses]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        } else {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "Failed to get addresses"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        }
+    }
 
 }
