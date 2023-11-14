@@ -29,6 +29,12 @@ header('Content-Type: application/json');
 //dd($multiPermission->grantGlobalPermission("1FJLQU46LYz4Lg1nyPciXJE4VCwRT7mDYX1yFY", 'send,receive'));
 //dd($multiPermission->getListOfSpecificPermissions('send,receive'));
 //dd($multiPermission->verifyPermission("1FJLQU46LYz4Lg1nyPciXJE4VCwRT7mDYX1yFY", 'send'));
+//dd($multiStream->publishInStream("chainStream", "XCV12345",  ['text' => 'hello world']));
+//dd($multiStream->multiPublishingOffChain("chainStream", [
+//        ['key' => 'key1', 'data' => ['json' => ['name' => 'John', 'age' => 30]]],
+//        ['keys' => ['key2', 'key3'], 'data' => ['json' => ['name' => 'Iogan', 'age' => 20]]]
+//    ]
+//));
 
 
 

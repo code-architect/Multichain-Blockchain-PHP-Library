@@ -14,6 +14,11 @@ class MultichainStreams extends BaseClass
     }
 
 
+    /**
+     * Subscribe to a stream
+     * @param string $streamName
+     * @return bool|string
+     */
     public function subscribeToStream(string $streamName): bool|string
     {
         $this->mc->subscribe($streamName);
@@ -28,9 +33,15 @@ class MultichainStreams extends BaseClass
     }
 
 
-    public function unSubscribeToStream(string $streamName, bool $plugOff)
+    /**
+     * Unsubscribe to a stream
+     * @param string $streamName
+     * @param bool $plugOff
+     * @return void
+     */
+    public function unSubscribeToStream(string $streamName, bool $plugOff=false): void
     {
-        $this->mc->unsubscribe('stream1', true);
+        $this->mc->unsubscribe($streamName, $plugOff);
     }
 
 
@@ -40,29 +51,54 @@ class MultichainStreams extends BaseClass
      * @param string $keys
      * @return void
      */
-    public function partialSubscription(string $streamName, string $keys)
+    public function partialSubscription(string $streamName, string $keys): void
     {
         $this->mc->subscribe('stream1', true, 'items,keys');
     }
 
 
-    public function publishInStream(string $key, array|string $data, string $streamName)
+    /**
+     * Publish into the stream
+     * @param string $streamName
+     * @param string|array $key Example:can give and array of keys or a single key e.g: ['key1', 'key2'], "key1"
+     * @param array|string $streamData Example: can be text data or json or raw binary or data from binary cache etc. e.g: 'aeg24gqg3d4', ['text' => 'hello world'], ['json' => ['name' => 'John Wick', 'age' => 45]], ['cache' => 'Ev1HQV1aUCY']
+     * @return bool|string
+     */
+    public function publishInStream(string $streamName, string|array $key, array|string $streamData): bool|string
     {
-        // check for permissions
-
-        // convert the data into json
-        $jsonData = json_encode($data);
-
         // publish and return response
-        $result = $this->mc->publish($streamName, $key, $jsonData);
-        if (isset($result['error'])) {
-            $data = ["status" => "error", "code" => 500, "data" => ["data" => $result['error']['message']]];
+        $result = $this->mc->publish($streamName, $key, $streamData);
+        if (empty($result)) {
+            $data = ["status" => "error", "code" => 422, "data" => ["data" => $result['error']['message']]];
             return $this->helper->makeJsonErrorResponse($data);
         } else {
             $data = ["status" => "success", "code" => 201, "data" => ["data" => "Published data to the stream successfully!!"]];
             return $this->helper->makeJsonSuccessResponse($data);
         }
     }
+
+
+    /**
+     * Publish into Multiple off chain/steam (requires Enterprise)
+     * @param string $streamName Stream name
+     * @param array|string $streamData Example: [['key' => 'key1', 'data' => ['json' => ['name' => 'John', 'age' => 30]]], ['keys' => ['key2', 'key3'], 'data' => ['json' => ['name' => 'Iogan', 'age' => 20]]]]
+     * @return bool|string
+     */
+    public function multiPublishingOffChain(string $streamName, array|string $streamData): bool|string
+    {
+        $result = $this->mc->publishmulti($streamName, $streamData);
+        if (empty($result)) {
+            $data = ["status" => "error", "code" => 422, "data" => ["data" => $result['error']['message']]];
+            return $this->helper->makeJsonErrorResponse($data);
+        } else {
+            $data = ["status" => "success", "code" => 201, "data" => ["data" => "Published data to the stream successfully!!"]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        }
+    }
+
+
+
+    /*  Querying subscribed streams  */
 
 
 }
