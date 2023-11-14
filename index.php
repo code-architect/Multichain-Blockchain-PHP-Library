@@ -15,6 +15,8 @@ $mc = $config->instance();
 $multiBasic = new \CodeArchitect\Framework\Operations\MultichainBasic(mc: $mc);
 // Multichain Streams
 $multiStream = new \CodeArchitect\Framework\Operations\MultichainStreams(mc: $mc);
+// Multichain Permission
+$multiPermission = new \CodeArchitect\Framework\Operations\MultichainPermissionsManagement(mc: $mc);
 header('Content-Type: application/json');
 
 // check if the connection is active or not
@@ -22,8 +24,13 @@ header('Content-Type: application/json');
 
 // List of all the streams
 //print_r($multiStream->getListOfStreams());
-// create a new stream
-dd($multiBasic->getsSecificAddresses(["18jqy14p8VLa9Zhouq3ZFUdSRjzam5cxXcphrZ", "1FJLQU46LYz4Lg1nyPciXJE4VCwRT7mDYX1yFY"]));
+
+//dd($multiPermission->getListOfSpecificAddressPermissions("17oExeajBCrYqP4v7gAjpspzk4eeun9dbTgiDV"));
+//dd($multiPermission->grantGlobalPermission("1FJLQU46LYz4Lg1nyPciXJE4VCwRT7mDYX1yFY", 'send,receive'));
+
+$var = ["123341sdfgrwhwr", "352feq5h"];
+$result =  implode(',', $var);
+dd($result);
 
 
 
