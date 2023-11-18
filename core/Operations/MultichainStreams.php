@@ -8,7 +8,7 @@ class MultichainStreams extends BaseClass
      * List of all the existing streams
      * @return mixed
      */
-    public function getListOfStreams()
+    public function getListOfStreams(): mixed
     {
         return $this->mc->liststreams();
     }
@@ -99,6 +99,69 @@ class MultichainStreams extends BaseClass
 
 
     /*  Querying subscribed streams  */
+
+    /**
+     * Return most recent items
+     * @param string $streamName
+     * @param bool $status
+     * @param int $num
+     * @param int $base
+     * @return bool|string
+     */
+    public function listAllStreamItems(string $streamName, bool $status=false, int $num=10, int $base=0): bool|string
+    {
+        $result = $this->mc->liststreamitems($streamName, $status, $num, $base);
+        if (empty($result)) {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "No Data Available"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        } else {
+            $data = ["status" => "success", "code" => 201, "data" => ["data" => $result]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        }
+    }
+
+
+    /**
+     * Find items based on key items, paging through items
+     * @param string $streamName
+     * @param string $key
+     * @param bool $status
+     * @param int $num
+     * @param int $base
+     * @return bool|string
+     */
+    public function listStreamItemsBasedOnItems(string $streamName, string $key, bool $status=false, int $num=10, int $base=0): bool|string
+    {
+        $result = $this->mc->liststreamkeyitems($streamName, $key, $status, $num, $base);
+        if (empty($result)) {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "No Data Available"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        } else {
+            $data = ["status" => "success", "code" => 201, "data" => ["data" => $result]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        }
+    }
+
+
+    /**
+     * @param string $streamName
+     * @param string $address
+     * @param bool $status
+     * @param int $num
+     * @param int $base
+     * @return bool|string
+     */
+    public function listStreamItemsBasedOnPublisher(string $streamName, string $address, bool $status=false, int $num=10, int $base=0): bool|string
+    {
+        $result = $this->mc->liststreampublisheritems($streamName, $address, $status, $num, $base);
+        if (empty($result)) {
+            $data = ["status" => "error", "code" => 404, "data" => ["data" => "No Data Available"]];
+            return $this->helper->makeJsonErrorResponse($data);
+        } else {
+            $data = ["status" => "success", "code" => 201, "data" => ["data" => $result]];
+            return $this->helper->makeJsonSuccessResponse($data);
+        }
+    }
 
 
 }

@@ -36,6 +36,7 @@ header('Content-Type: application/json');
 //    ]
 //));
 
-
+//dd($multiStream->listAllStreamItems("chainStream"));
+dd($multiStream->listStreamItemsBasedOnItems("chainStream", "Transaction125"));
 
 
