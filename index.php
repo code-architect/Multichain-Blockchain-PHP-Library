@@ -37,6 +37,8 @@ header('Content-Type: application/json');
 //));
 
 //dd($multiStream->listAllStreamItems("chainStream"));
-dd($multiStream->listStreamItemsBasedOnItems("chainStream", "Transaction125"));
+//dd($multiStream->listStreamItemsBasedOnItems("chainStream", "Transaction125"));
+//dd($multiStream->listStreamKeys("chainStream", ["Transaction125", "Transaction126"], true));
+//dd($multiStream->listStreamBasedOnBlock("chainStream", ['starttime' => 1577836800, 'endtime' => 1609459199]));
 
 

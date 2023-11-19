@@ -2,6 +2,8 @@
 
 namespace CodeArchitect\Framework\Operations;
 
+use http\Exception\InvalidArgumentException;
+
 class MultichainStreams extends BaseClass
 {
     /**
@@ -98,7 +100,7 @@ class MultichainStreams extends BaseClass
 
 
 
-    /*  Querying subscribed streams  */
+    /*------------------------------------------  Querying subscribed streams ----------------------------------------*/
 
     /**
      * Return most recent items
@@ -111,13 +113,7 @@ class MultichainStreams extends BaseClass
     public function listAllStreamItems(string $streamName, bool $status=false, int $num=10, int $base=0): bool|string
     {
         $result = $this->mc->liststreamitems($streamName, $status, $num, $base);
-        if (empty($result)) {
-            $data = ["status" => "error", "code" => 404, "data" => ["data" => "No Data Available"]];
-            return $this->helper->makeJsonErrorResponse($data);
-        } else {
-            $data = ["status" => "success", "code" => 201, "data" => ["data" => $result]];
-            return $this->helper->makeJsonSuccessResponse($data);
-        }
+        return $this->returnResult($result);
     }
 
 
@@ -133,17 +129,12 @@ class MultichainStreams extends BaseClass
     public function listStreamItemsBasedOnItems(string $streamName, string $key, bool $status=false, int $num=10, int $base=0): bool|string
     {
         $result = $this->mc->liststreamkeyitems($streamName, $key, $status, $num, $base);
-        if (empty($result)) {
-            $data = ["status" => "error", "code" => 404, "data" => ["data" => "No Data Available"]];
-            return $this->helper->makeJsonErrorResponse($data);
-        } else {
-            $data = ["status" => "success", "code" => 201, "data" => ["data" => $result]];
-            return $this->helper->makeJsonSuccessResponse($data);
-        }
+        return $this->returnResult($result);
     }
 
 
     /**
+     * Show most recent publisher items
      * @param string $streamName
      * @param string $address
      * @param bool $status
@@ -154,12 +145,116 @@ class MultichainStreams extends BaseClass
     public function listStreamItemsBasedOnPublisher(string $streamName, string $address, bool $status=false, int $num=10, int $base=0): bool|string
     {
         $result = $this->mc->liststreampublisheritems($streamName, $address, $status, $num, $base);
+        return $this->returnResult($result);
+    }
+
+
+    /**
+     * List latest stream data based on key or keys
+     * @param string $streamName
+     * @param string|array $keys Can be a single string like "key1" or an array like ["key1", "key2"]
+     * @param bool $status True or False
+     * @param int $num default is 10
+     * @param int $base default is 0
+     * @return bool|string
+     */
+    public function listStreamBasedOnKeys(string $streamName, string|array $keys='*', bool $status=false, int $num=10, int $base=0): bool|string
+    {
+        $result = $this->mc->liststreamkeys($streamName, $keys, $status, $num, $base);
+        return $this->returnResult($result);
+    }
+
+
+    /**
+     * List stream data based on addresses
+     * @param string $streamName
+     * @param string|array $addresses Can be a single string like "key1" or an array like ["key1", "key2"]
+     * @param bool $status True or False
+     * @param int $num default is 10
+     * @param int $base default is 0
+     * @return bool|string
+     */
+    public function listStreamBasedOnPublishers(string $streamName, string|array $addresses='*', bool $status=false, int $num=10, int $base=0): bool|string
+    {
+        $result = $this->mc->liststreampublishers($streamName, $addresses, $status, $num, $base);
+        return $this->returnResult($result);
+    }
+
+
+    /**
+     * Get blocks based on height, timestamp0
+     * @param string $streamName
+     * @param int|string|array $blocks can be string just one block, or block range i.e: 1 - 100, or most recent blocks -10, or blocks stamped in time range i.e: ['starttime' => 1577835600, 'endtime' => 160945299]
+     * @return bool|string
+     */
+    public function listStreamBasedOnBlock(string $streamName, int|string|array $blocks=125): bool|string
+    {
+        $result = $this->mc->liststreamblockitems($streamName, $blocks);
+        return $this->returnResult($result);
+    }
+
+
+    /**
+     * Return Data based on key (was enterprise now public)
+     * @param string $streamName
+     * @param string $key
+     * @param string $details
+     * @return bool|string
+     */
+    public function getStreamKeyDetails(string $streamName, string $key, string $details): bool|string
+    {
+        $result = $this->mc->getstreamkeysummary($streamName, $key, $details);
+        return $this->returnResult($result);
+    }
+
+
+    /**
+     * Return Data based on key (was enterprise now public)
+     * @param string $streamName
+     * @param string $address
+     * @param string $details
+     * @return bool|string
+     */
+    public function getStreamPublisherDetails(string $streamName, string $address, string $details): bool|string
+    {
+        $result = $this->mc->getstreampublishersummary($streamName, $address, $details);
+        return $this->returnResult($result);
+    }
+
+
+    /**
+     * Returns Query items based on keys
+     * @param string $streamName
+     * @param string|array $key Can be items with both keys (AND logic): ['keys' => ['key1', 'key2']] or ['key' => 'key1', 'publisher' => $address] with key and publisher
+     * @return bool|string
+     */
+    public function getStreamQueryItems(string $streamName, string|array $key): bool|string
+    {
+        $result = $this->mc->liststreamqueryitems($streamName, $key); // items with both keys (AND logic)
+       //
+        return $this->returnResult($result);
+    }
+
+
+
+    //------------------------------------------------ Private -------------------------------------------------------//
+    private function returnResult($result, int $errorCode = 404, int $successCode = 201)
+    {
         if (empty($result)) {
-            $data = ["status" => "error", "code" => 404, "data" => ["data" => "No Data Available"]];
+            $data = ["status" => "error", "code" => $errorCode, "data" => ["data" => "No Data Available"]];
             return $this->helper->makeJsonErrorResponse($data);
         } else {
-            $data = ["status" => "success", "code" => 201, "data" => ["data" => $result]];
+            $data = ["status" => "success", "code" => $successCode, "data" => ["data" => $result]];
             return $this->helper->makeJsonSuccessResponse($data);
+        }
+    }
+
+
+    private function checkRequiredParameter($requiredParameter): void
+    {
+        if ($requiredParameter === null) {
+            // Throw an exception or handle the error as needed
+            throw new InvalidArgumentException("Required parameter is missing.");
         }
     }
 
