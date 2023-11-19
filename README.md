@@ -1,15 +1,15 @@
 # Multichain Blockchain PHP library
 
-This is a library which I have created for my recent project.
-Its a useful tool if you want implement Multichain blockchain in  your projects. It is very easy to
+This is a library that I have created for my recent project.
+It's a useful tool if you want to implement Multichain blockchain in  your projects. It is very easy to
 use and work with. 
-I would suggest you to wrap around an MVC framework around it so cn be used kind of a BaaS (Blockchain as a Service)
-MultiChain 2.3.3. update the library `core/Private/MultiChainClient.php` to be able to use updated library.
+I would suggest you wrap around an MVC framework around it so it can be used kind of a BaaS (Blockchain as a Service)
+MultiChain 2.3.3. update the library `core/Private/MultiChainClient.php` to be able to use the updated library and change the `.env` file details. That should get your project up. I would highly recommend using docker as a deploy container.
 
-It is fairly easy Just go through `index.php` most of the examples provided there and the code is documented(can't believe it)
+It is fairly easy Just go through `index.php` most of the examples are provided there and the code is documented(can't believe it)
 
-## Basic commands fot Multichain Blockchain 
-To be able to work with multichain so basic cli commands are required, which are given below
+## Basic commands for Multichain Blockchain 
+To be able to work with multichain some basic CLI commands are required, which are given below
 
 
 Starting a node <br/>
